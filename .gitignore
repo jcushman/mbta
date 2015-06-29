@@ -1,0 +1,5 @@
+
+.idea/*
+app/php/settings.php
+app/php/cache/*
+!app/php/cache/README.txt

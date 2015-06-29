@@ -1,0 +1,52 @@
+body{
+    font-family: Century Gothic, sans-serif;
+    font-size: 2em;
+}
+.primary{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+#travel-time{
+    width: 3em;
+}
+.help-text{
+    font-size:.5em;
+    font-style: italic;
+}
+.header td{
+    border-bottom: .1em black solid;
+    border-top: .1em black solid;
+    margin: 1em 0;
+}
+.subhead{
+    display: inline;
+    font-size: .5em;
+}
+.small{
+    font-size:.35em;
+    position: relative;
+    top: .5em;
+}
+table{
+    width:100%;
+}
+td{
+    vertical-align: bottom;
+    width: 50%;
+    padding:.3rem;
+    padding-right:.6rem;
+}
+
+#chooser{
+    font-size:.5em;
+}
+.route-list{
+    margin: 1em;
+    max-height: 15em;
+    overflow: auto;
+    border: .2em #ccc solid;
+    padding: 1em;
+}
+.stop-minutes{
+    width:2em;
+}
