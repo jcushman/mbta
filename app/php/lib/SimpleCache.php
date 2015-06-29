@@ -29,21 +29,27 @@ class SimpleCache {
 	}
 	public function set_cache($label, $data)
 	{
-		file_put_contents($this->cache_path . $this->safe_filename($label) . $this->cache_extension, $data);
+		file_put_contents($this->get_filename($label), $data);
 	}
 	public function get_cache($label)
 	{
 		if($this->is_cached($label)){
-			$filename = $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
-			return file_get_contents($filename);
+			return file_get_contents($this->get_filename($label));
 		}
 		return false;
 	}
 	public function is_cached($label)
 	{
-		$filename = $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
-		if(file_exists($filename) && (filemtime($filename) + $this->cache_time >= time())) return true;
+		if(file_exists($this->get_filename($label)) && $this->cache_time >= $this->get_cache_age($label)) return true;
 		return false;
+	}
+	public function get_filename($label)
+	{
+		return $this->cache_path . $this->safe_filename($label) . $this->cache_extension;
+	}
+	public function get_cache_age($label)
+	{
+		return time() - filemtime($this->get_filename($label));
 	}
 	//Helper function for retrieving data from url
 	public function do_curl($url)

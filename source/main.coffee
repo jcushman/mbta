@@ -21,14 +21,13 @@ $ ->
 
     updateStops = ()->
       console.log stops
-      $.when.apply($,
-        apiRequest("predictionsbystop", {stop: stop.id}) for stop in stops
-      ).done((responses...)->
-        console.log responses
+      requests = (apiRequest("predictionsbystop", {stop: stop.id}) for stop in stops)
+      $.when.apply($, requests).done((responses...)->
         if stops.length == 1 then responses = [responses]
         html = "<table>"
         for response, i in responses
           [data, responseStatus, responseObject] = response
+          responseAge = requests[i].getResponseHeader('Age')
           stop = stops[i]
           mode = data.mode[0]
           route = mode.route.filter((r)->r.route_id==stop.route)[0]
@@ -41,7 +40,7 @@ $ ->
             for trip, i in trips
               # arrivalTime = new Date(trip.pre_dt*1000)
               # arrivalTimeString = ((arrivalTime.getHours() + 11) % 12 + 1) + ":" + ("0"+arrivalTime.getMinutes()).slice(-2)
-              trip.minutes = Math.floor(trip.pre_away/60)-stop.time
+              trip.minutes = Math.floor((trip.pre_away-responseAge)/60)-stop.time
               primaryTrip = false
               if trip.minutes > 0 and primaryTripIndex < 0
                 primaryTripIndex = i

@@ -46,8 +46,9 @@
         return $body.css('font-size', "" + bodyFontSize + "em");
       };
       updateStops = function() {
+        var requests;
         console.log(stops);
-        return $.when.apply($, (function() {
+        requests = (function() {
           var _i, _len, _results;
           _results = [];
           for (_i = 0, _len = stops.length; _i < _len; _i++) {
@@ -57,10 +58,10 @@
             }));
           }
           return _results;
-        })()).done(function() {
-          var data, firstDisplayIndex, html, mode, primaryTrip, primaryTripIndex, response, responseObject, responseStatus, responses, route, trip, trips, _i, _j, _k, _len, _len1, _len2;
+        })();
+        return $.when.apply($, requests).done(function() {
+          var data, firstDisplayIndex, html, mode, primaryTrip, primaryTripIndex, response, responseAge, responseObject, responseStatus, responses, route, trip, trips, _i, _j, _k, _len, _len1, _len2;
           responses = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-          console.log(responses);
           if (stops.length === 1) {
             responses = [responses];
           }
@@ -68,6 +69,7 @@
           for (i = _i = 0, _len = responses.length; _i < _len; i = ++_i) {
             response = responses[i];
             data = response[0], responseStatus = response[1], responseObject = response[2];
+            responseAge = requests[i].getResponseHeader('Age');
             stop = stops[i];
             mode = data.mode[0];
             route = mode.route.filter(function(r) {
@@ -82,7 +84,7 @@
               primaryTripIndex = -1;
               for (i = _j = 0, _len1 = trips.length; _j < _len1; i = ++_j) {
                 trip = trips[i];
-                trip.minutes = Math.floor(trip.pre_away / 60) - stop.time;
+                trip.minutes = Math.floor((trip.pre_away - responseAge) / 60) - stop.time;
                 primaryTrip = false;
                 if (trip.minutes > 0 && primaryTripIndex < 0) {
                   primaryTripIndex = i;
